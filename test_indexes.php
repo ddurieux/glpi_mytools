@@ -26,12 +26,13 @@ if ($DB->numrows($result)) {
          }
          if (count($index_column) == 0) {
             echo "ERROR: NO INDEX ON THE TABLE ".$table."\n";
-         }
-         $query3 = "EXPLAIN SELECT * FROM ".$table." WHERE ".  implode(' AND ', $index_column);
-         $result3 = $DB->query($query3);
-         while ($data = $DB->fetch_array($result3)) {
-            if ($data['type'] == 'ALL') {
-               echo "ERROR: INDEX ERROR ON THE TABLE ".$table."\n";
+         } else {
+            $query3 = "EXPLAIN SELECT * FROM ".$table." WHERE ".  implode(' AND ', $index_column);
+            $result3 = $DB->query($query3);
+            while ($data = $DB->fetch_array($result3)) {
+               if ($data['type'] == 'ALL') {
+                  echo "ERROR: INDEX ERROR ON THE TABLE ".$table."\n";
+               }
             }
          }
       }
