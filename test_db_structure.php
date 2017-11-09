@@ -7,6 +7,15 @@ $comparaisonSQLFile = "../install/mysql/glpi-empty.sql";
 $file_content = file_get_contents($comparaisonSQLFile);
 $a_lines = explode("\n", $file_content);
 
+//============= Add plugins SQL structure =============//
+if (file_exists("../plugins/fusioninventory")) {
+   $file_content = file_get_contents("../plugins/fusioninventory/install/mysql/plugin_fusioninventory-empty.sql");
+   $a_lines = array_merge($a_lines, explode("\n", $file_content));
+}
+
+
+//======================== end ========================//
+
 $a_tables_ref = array();
 $current_table = '';
 foreach ($a_lines as $line) {
@@ -63,9 +72,10 @@ foreach ($a_tables as $table) {
                $s_type[0] = str_replace(" COLLATE utf8_unicode_ci", "", $s_type[0]);
                $s_type[0] = str_replace(" CHARACTER SET utf8", "", $s_type[0]);
                $s_type[0] = str_replace(",", "", $s_type[0]);
-               if (trim($s_type[0]) == 'text'
-                  || trim($s_type[0]) == 'longtext') {
-                  //$s_type[0] .= ' DEFAULT NULL';
+               if ((trim($s_type[0]) == 'text'
+                     || trim($s_type[0]) == 'longtext')
+                  && strstr($table, "fusioninventory")) {
+                  $s_type[0] .= ' DEFAULT NULL';
                }
                $a_tables_db[$current_table][$s_line[1]] = $s_type[0];
             }
